@@ -6,3 +6,4 @@ This repo/ set of python files is for testing BirdNet model accuracy on audio fi
 1. Audio files that were used by me can be found in < insert link >. These have to be copied into the repo directory.
 2. Depending on use case you can either run "run_codes.py" for single time interval and conf or use "run_codes_variable_conf.py" for a range of conf values. Please change the conf values to what is suitable for you.
 3. Make sure that parent directory and directory of sound files is modified in your code. Change this in "run_codes.py" and "run_codes_variable_conf.py" as fits your need.
+4. The common resources folder contains the groud truth data and other supporting files for the code to run. The final confusion matrix information is stored here.
