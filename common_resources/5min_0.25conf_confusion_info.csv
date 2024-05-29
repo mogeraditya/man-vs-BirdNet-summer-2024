@@ -1,0 +1,105 @@
+,common name,datasheet,false negative,true positive,false positive,birdnet,union
+0,house crow,0,0,0,5,5,5
+1,large billed crow,194,182,12,1,13,195
+2,indian pond heron,5,5,0,0,0,5
+3,great cormorant,1,1,0,0,0,1
+4,rofous treepie,15,15,0,0,0,15
+5,tickells blue flycatcher,36,23,13,7,20,43
+6,orange headed thrush,0,0,0,3,3,3
+7,common tailorbird,126,63,63,29,92,155
+8,red whiskered bulbul,130,80,50,6,56,136
+9,small minivets,5,5,0,0,0,5
+10,lotens sunbird,0,0,0,9,9,9
+11,coppersmith barbet,16,16,0,0,0,16
+12,jerdons bushlark,0,0,0,2,2,2
+13,booted warbler,9,9,0,0,0,9
+14,plain prinia,1,1,0,0,0,1
+15,greater coucal,52,49,3,1,4,53
+16,black kite,96,63,33,8,41,104
+17,cinereous tit,0,0,0,18,18,18
+18,small minivet,0,0,0,12,12,12
+19,green warbler,13,7,6,8,14,21
+20,blyths reed warbler,0,0,0,4,4,4
+21,yellow throated bulbul,0,0,0,3,3,3
+22,indian roller,0,0,0,1,1,1
+23,asian koel,90,77,13,6,19,96
+24,crimson backed sunbird,0,0,0,6,6,6
+25,scaly breasted munia,10,10,0,0,0,10
+26,plum headed parakeet,0,0,0,1,1,1
+27,barn owl,0,0,0,22,22,22
+28,unknown,1,1,0,0,0,1
+29,black drongo,4,4,0,0,0,4
+30,indian yellow tit,0,0,0,1,1,1
+31,spot breasted fantail,2,2,0,3,3,5
+32,red naped ibis,0,0,0,8,8,8
+33,indian peafowl,10,10,0,0,0,10
+34,oriental white eyes,4,4,0,0,0,4
+35,brahminy kite,1,1,0,0,0,1
+36,grey wagtail,2,2,0,0,0,2
+37,rose ringed parakeet,147,77,70,16,86,163
+38,purple rumped sunbird,82,35,47,11,58,93
+39,golden oriole,2,2,0,0,0,2
+40,common myna,103,89,14,1,15,104
+41,common greenshank,0,0,0,3,3,3
+42,gray wagtail,0,0,0,9,9,9
+43,ashy drongo,7,7,0,0,0,7
+44,indian white eyes,57,57,0,0,0,57
+45,gray heron,0,0,0,1,1,1
+46,flame throated bulbul,0,0,0,25,25,25
+47,brown cheeked fulvetta,0,0,0,5,5,5
+48,white breasted waterhen,1,1,0,0,0,1
+49,alexandrine parakeet,0,0,0,2,2,2
+50,oriental magpie robin,137,96,41,9,50,146
+51,golden fronted leafbird,0,0,0,3,3,3
+52,white browed wagtail,0,0,0,1,1,1
+53,terek sandpiper,0,0,0,1,1,1
+54,indian gray hornbill,0,0,0,9,9,9
+55,pale billed flowerpecker,60,49,11,13,24,73
+56,jungle myna,59,58,1,6,7,65
+57,blythes reed warbler,11,11,0,0,0,11
+58,black naped oriole,3,3,0,0,0,3
+59,stork billed kingfisher,0,0,0,14,14,14
+60,lottens sunbird,21,21,0,0,0,21
+61,indian blue robin,19,19,0,0,0,19
+62,purple sunbird,10,10,0,1,1,11
+63,booted eagle,2,2,0,0,0,2
+64,indian white eye,0,0,0,17,17,17
+65,jungle prinia,0,0,0,1,1,1
+66,indian paradise flycatcher,7,7,0,0,0,7
+67,india pitta,1,1,0,0,0,1
+68,jerdons leafbird,0,0,0,1,1,1
+69,western crowned warbler,5,5,0,0,0,5
+70,common hawk cuckoo,0,0,0,2,2,2
+71,rufous treepie,0,0,0,5,5,5
+72,chestnut headed bee eater,0,0,0,1,1,1
+73,spotted dove,21,21,0,0,0,21
+74,shikra,32,22,10,3,13,35
+75,indian silverbill,0,0,0,1,1,1
+76,red whiskered bulbul?,1,1,0,0,0,1
+77,crested serpent eagle,0,0,0,2,2,2
+78,nilgiri flowerpecker,0,0,0,1,1,1
+79,zitting cisticola,0,0,0,1,1,1
+80,brown shrike,1,1,0,0,0,1
+81,common crow,1,1,0,0,0,1
+82,greenish warbler,24,17,7,3,10,27
+83,yellow billed babbler,6,6,0,26,26,32
+84,asian brown flycatcher,1,1,0,0,0,1
+85,orange minivet,0,0,0,5,5,5
+86,eurasian moorhen,0,0,0,1,1,1
+87,red vented bulbul,0,0,0,2,2,2
+88,indian robin,0,0,0,1,1,1
+89,black headed cuckooshrike,0,0,0,1,1,1
+90,cinerous tit,49,49,0,0,0,49
+91,western yellow wagtail,0,0,0,1,1,1
+92,osprey,0,0,0,1,1,1
+93,tailorbird id? aaa,1,1,0,0,0,1
+94,white throated kingfisher,13,11,2,5,7,18
+95,barbet? aaa,1,1,0,0,0,1
+96,gray junglefowl,0,0,0,17,17,17
+97,ashy prinia,53,22,31,11,42,64
+98,white breasted kingfisher,2,2,0,0,0,2
+99,ornate sunbird,1,1,0,0,0,1
+100,gray breasted prinia,0,0,0,7,7,7
+101,taiga flycatcher,0,0,0,1,1,1
+102,white cheeked barbet,163,140,23,1,24,164
+103,white browed bulbul,38,27,11,3,14,41
