@@ -78,4 +78,4 @@ def generate_confusion_matrix_info(time_interval, conf_threshold_for_bn, datashe
     make_dir(dir_store_confusion)
     os.chdir(dir_store_confusion)
     df_confusion.to_csv(str(time_interval)+"min_"+str(conf_threshold_for_bn)+"conf_confusion_info.csv")
-    return "successfully confused :D for" + str(conf_threshold_for_bn)+"confidence"
+    print("successfully confused :D for" + str(conf_threshold_for_bn)+"confidence")
