@@ -1,39 +1,7 @@
-
-import os
-import glob
-import pandas as pd
-
 #importing python files
 import splicer as sp
-import run_birdnet as rb
-import split_datasheet as sd
-import analysis_of_data as aod
-
-import soundfile as sf
-import librosa
-import os
-import glob
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-import matplotlib.colors as mcolors
-import random
-import matplotlib as mpl
-
-from birdnetlib import Recording
-from birdnetlib.analyzer import Analyzer
-from datetime import datetime
-
-import shutil
-from splicer import make_dir
-import run_birdnet as rb
-import generate_false_positive_audio as gfp
-import generate_true_positive_audio as gtp
-import generate_false_negative_audio as gfn
 import supporting_functions_for_audio_fetch as af
 
-analyzer= Analyzer()
 
 storage= "d:\\Research\\Rohini 2024\\Bird Data\\" #source folder
 sound_data= storage+ "sound_data\\" #location of sound files

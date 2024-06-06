@@ -2,32 +2,24 @@
 import os
 import glob
 import pandas as pd
-
-#importing python files
-import splicer as sp
-import run_birdnet as rb
-import split_datasheet as sd
-import analysis_of_data as aod
-
 import soundfile as sf
 import librosa
 import os
 import glob
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
-import matplotlib.colors as mcolors
-import random
-import matplotlib as mpl
+#importing birdnet requirements
 
 from birdnetlib import Recording
 from birdnetlib.analyzer import Analyzer
 from datetime import datetime
 
-import shutil
-from splicer import make_dir
+#importing python files
+
 import run_birdnet as rb
+from run_birdnet import make_dir
+
 import generate_false_positive_audio as gfp
 import generate_true_positive_audio as gtp
 import generate_false_negative_audio as gfn
@@ -120,7 +112,7 @@ def run_birdnet_and_fetch_files(samples_audio, big_dir, common_resources, conf_t
             number_of_audio_files= len(audio_files)
             for kv in range(number_of_audio_files):
                 os.chdir(date_folder)
-                audio_file= audio_files[0]
+                audio_file= audio_files[kv]
                 recording = Recording(
                 analyzer,
                 audio_file,

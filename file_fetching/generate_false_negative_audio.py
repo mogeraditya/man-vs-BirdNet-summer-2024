@@ -1,18 +1,7 @@
-import soundfile as sf
-import librosa
 import os
 import glob
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-
-import matplotlib.colors as mcolors
-import random
-import matplotlib as mpl
-
-from birdnetlib import Recording
-from birdnetlib.analyzer import Analyzer
-from datetime import datetime
 
 import shutil
 import run_birdnet as rb
@@ -89,9 +78,9 @@ def mass_run_all_dates(code, datasheet_per_date_birdnet_only, per_date_birdnet_o
             except KeyError:
                 bd_compare_array=set([])
 
-            bd_intersection_ds= bd_compare_array.copy()
-            bd_intersection_ds= bd_intersection_ds.intersection(ds_compare_array)
-            new_df["#datasheet\\birdnet"]= list(bd_intersection_ds)
+            ds_minus_bd= ds_compare_array.copy()
+            ds_minus_bd= ds_minus_bd.difference(bd_compare_array)
+            new_df["#datasheet\\birdnet"]= list(ds_minus_bd)
             new_df["date"]= date
             new_df["time code"]=time
             stats_df= pd.concat([stats_df, new_df])

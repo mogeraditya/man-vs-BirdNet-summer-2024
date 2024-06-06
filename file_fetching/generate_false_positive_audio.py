@@ -1,19 +1,7 @@
-import soundfile as sf
-import librosa
 import os
 import glob
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-
-import matplotlib.colors as mcolors
-import random
-import matplotlib as mpl
-
-from birdnetlib import Recording
-from birdnetlib.analyzer import Analyzer
-from datetime import datetime
-
 import shutil
 import run_birdnet as rb
 
