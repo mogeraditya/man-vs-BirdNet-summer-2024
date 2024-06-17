@@ -1,7 +1,7 @@
 import os
 import glob
 import pandas as pd
-import datetime
+from datetime import datetime
 #importing python files
 import splicer as sp
 import pool_birdnet as pb
@@ -25,17 +25,10 @@ df= pd.read_excel("current_training.xlsx")
 split= storage+ "audio_files_split\\"
 # sp.run_slicer_on_all_files(df, sound_data, time_interval, split)
 
-os.chdir(split)
-list_of_folders= glob.glob("**") #indicative of number of dates you are running this on
-number_of_folders= len(list_of_folders)
-print(list_of_folders)
-
-for it in range(number_of_folders): #iterate through all the  dates
-    folder_name_w_date= list_of_folders[it]
-    file_array= pb.get_inputs_to_pool_birdnet(folder_name_w_date, common_resources, split, conf_threshold_for_bn)
-    if __name__ == "__main__":
-        t0 = datetime.now()
-        results1 = pb.apply_multiprocessing(file_array, pb.run_birdnet)
-        t1 = datetime.now()
-        print (results1)
-        print ("Multi: {}".format(t1 - t0))
+file_array= pb.get_inputs_to_pool_birdnet(common_resources, split, conf_threshold_for_bn)
+if __name__ == "__main__":
+    t0 = datetime.now()
+    results1 = pb.apply_multiprocessing(file_array, pb.run_birdnet)
+    t1 = datetime.now()
+    print (results1)
+    print ("Time taken for task : {}".format(t1 - t0))
