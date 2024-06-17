@@ -17,13 +17,13 @@ conf_threshold_for_bn= 0.3 #ranges from 0 to 1
 
 new_dir, code, split, datasheet_per_date_birdnet_only, per_date_birdnet_only= sp.create_required_directories(storage, time_interval, conf_threshold_for_bn)
 
-# os.chdir(sound_data)
-# sound_files_names= glob.glob("*.WAV")
+os.chdir(sound_data)
+sound_files_names= glob.glob("*.WAV")
 
 os.chdir(common_resources)
 df= pd.read_excel("current_training.xlsx")
 split= storage+ "audio_files_split\\"
-# sp.run_slicer_on_all_files(df, sound_data, time_interval, split)
+sp.run_slicer_on_all_files(df, sound_data, time_interval, split)
 
 file_array= pb.get_inputs_to_pool_birdnet(common_resources, split, conf_threshold_for_bn)
 if __name__ == "__main__":
@@ -32,3 +32,12 @@ if __name__ == "__main__":
     t1 = datetime.now()
     print (results1)
     print ("Time taken for task : {}".format(t1 - t0))
+pb.merged_csv_and_delete_audio(split, per_date_birdnet_only, delete_files=False)
+
+os.chdir(common_resources)
+df_datasheet= pd.read_csv("current_training_w_codes.csv")
+df_datasheet= sd.add_date_time_codes(df_datasheet)
+sd.parse_datasheet_alldates_into_files(df_datasheet, time_interval, per_date_birdnet_only, datasheet_per_date_birdnet_only)
+
+dir_store_confusion= common_resources+ "conf_" + str(conf_threshold_for_bn)+ "\\"
+aod.generate_confusion_matrix_info(time_interval, conf_threshold_for_bn, datasheet_per_date_birdnet_only, per_date_birdnet_only, dir_store_confusion)

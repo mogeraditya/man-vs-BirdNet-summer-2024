@@ -50,7 +50,7 @@ def store_relevant_info_from_birdnet(array_w_dicts, dir_to_store, audio_file, lo
                 array_start_time.append(current_dict["start_time"])
         clean_name= remove_special_from_names([bird])
         dict_w_start_time[clean_name[0]]= array_start_time
-    print(dict_w_start_time)
+
     make_dir(dir_to_store)
     os.chdir(dir_to_store)
     new_dir= dir_to_store+ date +"_"+location+"_"+weather+"\\"
@@ -80,7 +80,7 @@ def remove_special_from_names(array):
 
     return new_array
 
-def run_birdnet(audio_file, lat, lon, date_in_datetime, conf_threshold_for_bn, dir, common_resources, location, weather, date):
+def run_birdnet(audio_file, lat, lon, date_in_datetime, conf_threshold_for_bn, dir, common_resources, location, weather, date, per_date_birdnet_only):
     wd= os.getcwd()
     os.chdir(dir)
     recording = Recording(
@@ -96,10 +96,26 @@ def run_birdnet(audio_file, lat, lon, date_in_datetime, conf_threshold_for_bn, d
     array= np.array(recording.detections)
     dir_to_store= common_resources+ "store_birdnet_info\\"
     store_relevant_info_from_birdnet(array, dir_to_store, audio_file, location, weather, date)
-    print(array)
+
     seg_unique= find_unique_bird_ids(array)
     seg_unique= remove_special_from_names(seg_unique)
+
+    os.chdir(common_resources)
+    prediction_df=pd.read_csv("prediction.csv")
     os.chdir(wd)
+    prediction_df["common name"]= seg_unique
+    prediction_df["Location"]= location
+    prediction_df["Weather"]= weather
+    file_label= audio_file[-6:-4]
+    if file_label=="_0":
+        file_label="00"
+    if file_label=="_5":
+        file_label="05"
+    prediction_df["time"]=file_label
+
+    os.chdir(per_date_birdnet_only)
+    prediction_df.to_csv(audio_file[:-4]+"_birdnet_5_mins.csv")
+
     return seg_unique
 
 def get_inputs_to_pool_birdnet(common_resources, split, conf_threshold_for_bn):
@@ -107,19 +123,18 @@ def get_inputs_to_pool_birdnet(common_resources, split, conf_threshold_for_bn):
     os.chdir(split)
     list_of_folders= glob.glob("**") #indicative of number of dates you are running this on
     number_of_folders= len(list_of_folders)
-    print(list_of_folders)
+
 
     for it in range(number_of_folders): #iterate through all the  dates
         folder_name_w_date= list_of_folders[it]
         date= folder_name_w_date[0:8]
         date_in_datetime= datetime(year=int(date[0:4]), month=int(date[4:6]), day=int(date[6:8]))
-        print(date)
+
         os.chdir(common_resources)
         date_loc_df= pd.read_csv("date_loc_df.csv")
 
         date_loc_dict= {str(date_loc_df["date"][i]): [date_loc_df["Location"][i], date_loc_df["Weather"][i], date_loc_df["lat"][i],date_loc_df["lon"][i]] for i in range(len(date_loc_df["date"]))}
-        
-        print(date_loc_dict)
+
         try:    
             location,weather,lat,lon= [date_loc_dict.get(date)[i] for i in (0,1,2,3)]
         except TypeError:
@@ -130,10 +145,11 @@ def get_inputs_to_pool_birdnet(common_resources, split, conf_threshold_for_bn):
 
         files_in_a_date= glob.glob("*.WAV")
 
-        file_array= [[file_in_a_date,lat, lon, date_in_datetime, conf_threshold_for_bn, date_folder, common_resources, location, weather, date] for file_in_a_date in files_in_a_date]
+        file_array= [[file_in_a_date,lat, lon, date_in_datetime, conf_threshold_for_bn,
+                       date_folder, common_resources, location, weather, date] for file_in_a_date in files_in_a_date]
+        
         master_array+=file_array.copy()
     
-    print(master_array)
     return master_array
 
 def apply_multiprocessing(input_list, input_function, pool_size = 4):
@@ -161,3 +177,22 @@ def apply_multiprocessing(input_list, input_function, pool_size = 4):
     finally:
         pool.close()
         pool.join()
+
+def merged_csv_and_delete_audio(split, per_date_birdnet_only, delete_files):
+    df_list= []
+    os.chdir(per_date_birdnet_only)
+    list_of_csvs= glob.glob("*.csv")
+    for csv in list_of_csvs:
+        df= pd.read_csv(csv)
+        df_list.append(df)
+    dataframe= pd.concat(df_list, ignore_index= True)
+    dataframe.to_csv("merged_mass_birdnet_5mins.csv")
+
+    if delete_files== True:
+        dir= split
+        os.chdir(dir)
+        for foldername in os.listdir():
+            os.chdir(dir+foldername)
+            for filename in os.listdir():
+                if filename.endswith('.WAV'):
+                    os.unlink(filename)
