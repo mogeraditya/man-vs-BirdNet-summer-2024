@@ -4,10 +4,10 @@ import glob
 import pandas as pd
 
 #importing python files
-import splicer as sp
-import run_birdnet as rb
-import split_datasheet as sd
-import analysis_of_data as aod
+from basic_codes import splicer as sp
+from basic_codes import run_birdnet as rb
+from basic_codes import split_datasheet as sd
+from basic_codes import analysis_of_data as aod
 
 
 storage= "d:\\Research\\Rohini 2024\\Bird Data\\" #source folder
@@ -15,7 +15,7 @@ sound_data= storage+ "sound_data\\" #location of sound files
 common_resources= storage+ "common_resources\\" #refer to common resources folder in github
 
 time_interval= 5 #in minutes
-conf_threshold_for_bn= 0.3 #ranges from 0 to 1
+conf_threshold_for_bn= 0.9 #ranges from 0 to 1
 
 new_dir, code, split, datasheet_per_date_birdnet_only, per_date_birdnet_only= sp.create_required_directories(storage, time_interval, conf_threshold_for_bn)
 

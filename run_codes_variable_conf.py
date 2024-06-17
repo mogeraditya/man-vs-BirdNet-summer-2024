@@ -4,10 +4,10 @@ import numpy as np
 import pandas as pd
 
 #importing python files
-import splicer as sp
-import run_birdnet as rb
-import split_datasheet as sd
-import analysis_of_data as aod
+from basic_codes import splicer as sp
+from basic_codes import run_birdnet as rb
+from basic_codes import split_datasheet as sd
+from basic_codes import analysis_of_data as aod
 
 
 storage= "d:\\Research\\Rohini 2024\\Bird Data\\" #source folder

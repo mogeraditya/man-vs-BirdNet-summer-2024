@@ -2,7 +2,6 @@ import os
 import glob
 import numpy as np
 import pandas as pd
-
 import shutil
 import run_birdnet as rb
 
@@ -22,7 +21,7 @@ def mass_run_all_dates(code, datasheet_per_date_birdnet_only, per_date_birdnet_o
     dates= [i[0:8] for i in file_list]
     dates=dates[:-1]
 
-    super_stats_df=pd.DataFrame(columns=["date", "#datasheet\\birdnet", "time code" ])
+    super_stats_df=pd.DataFrame(columns=["date", "# birdnet\\datasheet", "time code" ])
 
     for iterant in range(len(dates)):
         date= dates[iterant]
@@ -51,7 +50,7 @@ def mass_run_all_dates(code, datasheet_per_date_birdnet_only, per_date_birdnet_o
 
         date= dates[iterant]
 
-        stats_df= pd.DataFrame(columns=["date","#datasheet\\birdnet", "time code"])
+        stats_df= pd.DataFrame(columns=["date","# birdnet\\datasheet", "time code"])
 
         input_time_interval=5
 
@@ -65,7 +64,7 @@ def mass_run_all_dates(code, datasheet_per_date_birdnet_only, per_date_birdnet_o
         print(date)
         for it in range(len(time_codes)):
             time= time_codes[it]
-            new_df= pd.DataFrame(columns=["date","#datasheet\\birdnet", "time code"])
+            new_df= pd.DataFrame(columns=["date","# birdnet\\datasheet", "time code"])
             ds_groupby= df_ds_split.groupby("time code")
             ds_compare= ds_groupby.get_group(time_codes[it])
             ds_compare_array=set(np.array(ds_compare["common name"]))
@@ -78,9 +77,9 @@ def mass_run_all_dates(code, datasheet_per_date_birdnet_only, per_date_birdnet_o
             except KeyError:
                 bd_compare_array=set([])
 
-            ds_minus_bd= ds_compare_array.copy()
-            ds_minus_bd= ds_minus_bd.difference(bd_compare_array)
-            new_df["#datasheet\\birdnet"]= list(ds_minus_bd)
+            bd_minus_ds= bd_compare_array.copy()
+            bd_minus_ds= bd_minus_ds.difference(ds_compare_array)
+            new_df["# birdnet\\datasheet"]= list(bd_minus_ds)
             new_df["date"]= date
             new_df["time code"]=time
             stats_df= pd.concat([stats_df, new_df])
@@ -88,25 +87,25 @@ def mass_run_all_dates(code, datasheet_per_date_birdnet_only, per_date_birdnet_o
         # stats_df.to_csv(date+"_stats_w_names_cl.csv")  
         super_stats_df= pd.concat([super_stats_df, stats_df])
 
-    dir= code+"\\stats_fn\\"
+    dir= code+"\\stats_fp\\"
     make_dir(dir)
     os.chdir(dir)
     super_stats_df.to_csv("all_dates_merged_w_names_"+str(conf)+"confidence.csv")
     return "done :D"
 
 def copy_required_files(code, split, conf, delete_files):
-    os.chdir(code+"\\stats_fn\\")
+    os.chdir(code+"\\stats_fp\\")
     df_w_differences= pd.read_csv("all_dates_merged_w_names_"+str(conf)+"confidence.csv")
     range_of_times= df_w_differences["time code"]
     range_of_times=[str(i) for i in range_of_times]
     range_of_times=["0"+i if len(i)<2 else i for i in range_of_times ]
     df_w_differences["time code"]= range_of_times
-    array_unique= df_w_differences["#datasheet\\birdnet"]
+    array_unique= df_w_differences["# birdnet\\datasheet"]
     array_unique= list(set(array_unique))
     array_unique
-    array_data= df_w_differences["#datasheet\\birdnet"]
+    array_data= df_w_differences["# birdnet\\datasheet"]
 
-    samples_audio_bnfails= code+ "\\audio_files_fn\\"
+    samples_audio_bnfails= code+ "\\audio_files_fp\\"
     make_dir(samples_audio_bnfails)
 
     os.chdir(split)

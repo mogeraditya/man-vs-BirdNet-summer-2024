@@ -10,6 +10,11 @@ from datetime import datetime
 # Load and initialize the BirdNET-Analyzer models.
 analyzer = Analyzer()
 
+def make_dir(new_dir): 
+    if not os.path.exists(new_dir):
+        os.makedirs(new_dir)
+    return "made dir " + str(new_dir)
+
 #given array of names find all unique names
 def find_unique_bird_ids(array_w_dicts):
     length= len(array_w_dicts)

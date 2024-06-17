@@ -1,6 +1,6 @@
 #importing python files
-import splicer as sp
-import supporting_functions_for_audio_fetch as af
+from basic_codes import splicer as sp
+from basic_codes import supporting_functions_for_audio_fetch as af
 
 
 storage= "d:\\Research\\Rohini 2024\\Bird Data\\" #source folder

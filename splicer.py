@@ -63,8 +63,7 @@ def slicer(filename, time_interval, sound_folder, split):
     counter = 0
     old_directory= os.getcwd()
     new_path= split+filename[0:8]+"\\"
-    if not os.path.exists(new_path):
-        os.makedirs(new_path)
+    make_dir(new_path)
     os.chdir(new_path)
     while samples_wrote < samples_total:
         #check if the buffer is not exceeding total samples 
@@ -74,7 +73,6 @@ def slicer(filename, time_interval, sound_folder, split):
         block = audio[samples_wrote : (samples_wrote + buffer)]
         out_filename =  filename[0:8] + "_" + "split_" + str(counter) +".WAV"
 
-        # Write 2 second segment
         sf.write(out_filename, block, sr)
         counter += int(time_interval)
         samples_wrote += buffer
