@@ -19,8 +19,8 @@ new_dir, code, split, datasheet_per_date_birdnet_only, per_date_birdnet_only= sp
 split= storage+ "audio_files_split\\"
 confusion_codes= ["tp", "fp", "fn"]
 
-# for confusion_code in confusion_codes:
-#     gcd.mass_run_all_dates(code, datasheet_per_date_birdnet_only, per_date_birdnet_only, conf, confusion_code)
+for confusion_code in confusion_codes:
+    gcd.mass_run_all_dates(code, datasheet_per_date_birdnet_only, per_date_birdnet_only, conf, confusion_code)
     
 confusion_type= "tp"
 ff.mass_run_fetch_files(confusion_type, conf, code, split, dir)
