@@ -56,7 +56,7 @@ def fetch_files(dir, date, time_code, bird, dir_tp_files, split):
         for start_time in array_start_time:
             get_piece_of_audio(input_folder_name, audio_file_name, start_time, bird, dir_to_store, split)
 
-def mass_run_fetch_files(confusion_type, conf, code, split):
+def mass_run_fetch_files(confusion_type, conf, code, split, dir):
     dir_tp_files= code + confusion_type+"_audio_files\\"
     make_dir(dir_tp_files)
     stats= code+"\\stats_"+confusion_type+"\\"
@@ -71,7 +71,7 @@ def mass_run_fetch_files(confusion_type, conf, code, split):
         make_dir(bird_dir)
         bird_df= grouped_df.get_group(bird)
         date_list, time_list= list(bird_df["date"]), list(bird_df["time code"])
-        date_time_tuple_list= [(date_list[i],time_list[i]) for i in range(len(bird_df["# birdnet x datasheet"]))]
+        date_time_tuple_list= [(date_list[i],time_list[i]) for i in range(len(bird_df["name"]))]
 
         for tuple in date_time_tuple_list:
             date= str(tuple[0])
