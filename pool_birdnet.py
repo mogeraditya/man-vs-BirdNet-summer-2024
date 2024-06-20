@@ -36,7 +36,7 @@ def find_unique_bird_ids(array_w_dicts):
     unique= list(set(all_common_array))
     return unique
 
-def store_relevant_info_from_birdnet(array_w_dicts, dir_to_store, audio_file, location, weather, date):
+def store_relevant_info_from_birdnet(array_w_dicts, dir_to_store, audio_file, location, weather, date, conf):
     wd= os.getcwd()
 
     unique_birds= find_unique_bird_ids(array_w_dicts)
@@ -53,10 +53,10 @@ def store_relevant_info_from_birdnet(array_w_dicts, dir_to_store, audio_file, lo
 
     make_dir(dir_to_store)
     os.chdir(dir_to_store)
-    new_dir= dir_to_store+ date +"_"+location+"_"+weather+"\\"
+    new_dir= dir_to_store+ date +"_"+str(conf)+"\\"
     make_dir(new_dir)
     os.chdir(new_dir)
-
+    print(dict_w_start_time)
     with open(audio_file[:-4]+'.pickle', 'wb') as handle:
         pickle.dump(dict_w_start_time, handle, protocol=-1)
 
@@ -95,7 +95,7 @@ def run_birdnet(audio_file, lat, lon, date_in_datetime, conf_threshold_for_bn, d
 
     array= np.array(recording.detections)
     dir_to_store= common_resources+ "store_birdnet_info\\"
-    store_relevant_info_from_birdnet(array, dir_to_store, audio_file, location, weather, date)
+    store_relevant_info_from_birdnet(array, dir_to_store, audio_file, location, weather, date, conf=conf_threshold_for_bn)
 
     seg_unique= find_unique_bird_ids(array)
     seg_unique= remove_special_from_names(seg_unique)
@@ -118,7 +118,7 @@ def run_birdnet(audio_file, lat, lon, date_in_datetime, conf_threshold_for_bn, d
 
     return seg_unique
 
-def get_inputs_to_pool_birdnet(common_resources, split, conf_threshold_for_bn):
+def get_inputs_to_pool_birdnet(common_resources, split, conf_threshold_for_bn, per_date_birdnet_only):
     master_array= []
     os.chdir(split)
     list_of_folders= glob.glob("**") #indicative of number of dates you are running this on
@@ -146,7 +146,7 @@ def get_inputs_to_pool_birdnet(common_resources, split, conf_threshold_for_bn):
         files_in_a_date= glob.glob("*.WAV")
 
         file_array= [[file_in_a_date,lat, lon, date_in_datetime, conf_threshold_for_bn,
-                       date_folder, common_resources, location, weather, date] for file_in_a_date in files_in_a_date]
+                       date_folder, common_resources, location, weather, date, per_date_birdnet_only] for file_in_a_date in files_in_a_date]
         
         master_array+=file_array.copy()
     
