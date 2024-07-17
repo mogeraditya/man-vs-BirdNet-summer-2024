@@ -6,15 +6,8 @@ import pandas as pd
 from birdnetlib import Recording
 from birdnetlib.analyzer import Analyzer
 from datetime import datetime
-from multiprocessing import Pool
-import splicer as sp
-import run_birdnet as rb
-import split_datasheet as sd
-import analysis_of_data as aod
 import pickle 
-
 import multiprocessing
-import time
 from datetime import datetime
 
 # Load and initialize the BirdNET-Analyzer models.
@@ -80,20 +73,21 @@ def remove_special_from_names(array):
 
     return new_array
 
-def run_birdnet(audio_file, conf_threshold_for_bn, dir,common_resources, location, weather, date, per_date_birdnet_only):
+def run_birdnet(audio_file, lat, lon, date_in_datetime, conf_threshold_for_bn, dir, common_resources, location, weather, date, per_date_birdnet_only):
     wd= os.getcwd()
     os.chdir(dir)
-    dir= common_resources+ "store_birdnet_all_confs_library\\"
-    os.chdir(dir)
-    file_name= audio_file[:-4]+'_0_conf.pickle'
-    with open(file_name, 'rb') as handle:
-        data = pickle.load(handle)
-    array= []
-    for dict in data:
-        if dict["confidence"]>=conf_threshold_for_bn:
-            array.append(dict)
-    array= np.array(array)
-    dir_to_store= common_resources+ "store_birdnet_dictionaries\\"
+    recording = Recording(
+    analyzer,
+    audio_file,
+    lat= lat,
+    lon= lon,
+    date=date_in_datetime, # use date or week_48
+    min_conf= conf_threshold_for_bn,
+    )
+    recording.analyze()
+
+    array= np.array(recording.detections)
+    dir_to_store= common_resources+ "store_birdnet_info\\"
     store_relevant_info_from_birdnet(array, dir_to_store, audio_file, location, weather, date, conf=conf_threshold_for_bn)
 
     seg_unique= find_unique_bird_ids(array)
@@ -144,7 +138,7 @@ def get_inputs_to_pool_birdnet(common_resources, split, conf_threshold_for_bn, p
 
         files_in_a_date= glob.glob("*.WAV")
 
-        file_array= [[file_in_a_date, conf_threshold_for_bn,
+        file_array= [[file_in_a_date,lat, lon, date_in_datetime, conf_threshold_for_bn,
                        date_folder, common_resources, location, weather, date, per_date_birdnet_only] for file_in_a_date in files_in_a_date]
         
         master_array+=file_array.copy()
@@ -195,18 +189,3 @@ def merged_csv_and_delete_audio(split, per_date_birdnet_only, delete_files):
             for filename in os.listdir():
                 if filename.endswith('.WAV'):
                     os.unlink(filename)
-
-storage= "d:\\Research\\analyze_birdnet\\" #source folder
-sound_data= storage+ "sound_data\\" #location of sound files
-common_resources= storage#+ "common_resources\\" #refer to common resources folder in github
-
-split= storage+ "audio_files_split\\"
-conf= 0.3
-per_date_birdnet_only= "D:\\Research\\analyze_birdnet\\folder_for_5mins_0.3confidence\\code\\test_per_date_birdnet_only\\"
-file_array= get_inputs_to_pool_birdnet(common_resources, split, conf, per_date_birdnet_only)
-if __name__ == "__main__":
-    t0 = datetime.now()
-    results1 = apply_multiprocessing(file_array, run_birdnet)
-    t1 = datetime.now()
-    print (results1)
-    print ("Time taken for task : {}".format(t1 - t0))

@@ -3,7 +3,7 @@ import glob
 import numpy as np
 import pandas as pd
 import shutil
-import run_birdnet as rb
+# import run_birdnet as rb
 
 # Load and initialize the BirdNET-Analyzer models.
 # analyzer = Analyzer()
@@ -25,6 +25,24 @@ def merge_bds(per_date_birdnet_only, date):
     dataframe= pd.concat(df_list, ignore_index= True)
 
     dataframe.to_csv(date+"_split_datasheet5.csv")
+
+def remove_special_from_names(array):
+    new_array=[]
+    for it in range(len(array)):
+        special_string= array[it]
+        sample_list=[]
+        for i in special_string:
+            if i.isalnum()or i==" " or i=="-":
+                if i=="-":
+                    sample_list.append(" ")
+                else:
+                    sample_list.append(i.lower())
+        # Join the elements in the list to create a string
+        normal_string="".join(sample_list)
+        new_array.append(normal_string)
+
+    return new_array
+
 def mass_run_all_dates(code, datasheet_per_date_birdnet_only, per_date_birdnet_only, conf, confusion_code):
     #given
 
@@ -56,7 +74,7 @@ def mass_run_all_dates(code, datasheet_per_date_birdnet_only, per_date_birdnet_o
         array_times=["0"+i[1] if i[0]=="_" else i for i in array_times]
         df_bd_split['time']= array_times
 
-        df_bd_split["common name"]=rb.remove_special_from_names(df_bd_split["common name"])
+        df_bd_split["common name"]=remove_special_from_names(df_bd_split["common name"])
         # print(df_bd_split)
 
 
@@ -70,7 +88,7 @@ def mass_run_all_dates(code, datasheet_per_date_birdnet_only, per_date_birdnet_o
 
         time_codes=[str(i) for i in time_codes]
         time_codes=["0"+i if len(i)<2 else i for i in time_codes]
-
+        time_codes=["05","10","15","20","25","30","40","45"]
         # bd_minus_ds_array=[]
 
         # print(date)
