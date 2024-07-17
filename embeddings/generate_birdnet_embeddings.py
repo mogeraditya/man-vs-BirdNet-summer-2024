@@ -60,8 +60,7 @@ def generate_embeddings_per_date(audio_file,lat, lon, date_code, date_in_datetim
 
     dir_to_store= common_resources+"store_embeddings_dict\\"+ date_code + "\\"
     create_embeddings_averaged_one_minute(embeddings, dir_to_store, date_code)
-    return "Done for" + str(date_code)
-
+    return "Done for " + str(date_code)
 
 def get_inputs_to_pool_birdnet(common_resources, sound_data, conf):
     master_array= []    
