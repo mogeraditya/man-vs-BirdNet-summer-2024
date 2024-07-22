@@ -3,6 +3,7 @@ import glob
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import pickle
 
 def make_dir(new_dir): 
     if not os.path.exists(new_dir):
@@ -10,12 +11,7 @@ def make_dir(new_dir):
     return "made dir " + str(new_dir)
 
 #goal is to generate a list of bird names across the whole dataset.
-wd= "D:\\github\\man-vs-BirdNet-summer-2024-\\embeddings"
-common_resources= wd+ "\\common_resources\\"
-os.chdir(common_resources)
-df_datasheet= pd.read_excel("current_training_dataset.xlsx")
-os.chdir(wd)
-print(df_datasheet)
+
 
 def find_difference_in_minutes(time1, time2):
     t1= datetime.strptime(str(time1), "%H:%M:%S")
@@ -33,10 +29,10 @@ def add_time_codes_to_df(df):
     for iterant in range(len(df["Time"])):
         if date_array[iterant-1]== date_array[iterant]:
             if time_array[iterant]==np.nan:
-                print(date_array[iterant])
+                # print(date_array[iterant])
                 continue
             else:
-                print(time_array[iterant])
+                # print(time_array[iterant])
                 minute_diff= find_difference_in_minutes(time_array[iterant-1], time_array[iterant])
                 if minute_diff==0:
                     time_code=time_code
@@ -59,29 +55,41 @@ def add_date_time_codes(df_datasheet):
     df_datasheet["time code"]= time_array
     return df_datasheet
 
-df_datasheet["codes"]= add_time_codes_to_df(df_datasheet)
-df_datasheet= add_date_time_codes(df_datasheet)
+
 # df_datasheet= pd.read_csv("current_training_dataset.csv")
 
-def parse_df_for_seen_only(df, dir_to_store):
-    array_names, array_dates, array_timecodes, array_loc, array_wea = [], [], [], [], []
-    array= [array_names, array_dates, array_timecodes, array_loc, array_wea]
-    keys=["name", "date", "time code", "loc", "wea"]
+def parse_df_for_seen_only(df, dir_to_store, indices):
+    array_names, array_dates, array_timecodes, array_loc, array_wea, array_datetime = [], [], [], [], [], []
+    array= [array_names, array_dates, array_timecodes, array_loc, array_wea, array_datetime]
+    keys=["name", "date", "time code", "loc", "wea", "datetimelabel"]
+    if "h" in indices:
+        for iterant in range(len(df["Names"])):
 
-    for iterant in range(len(df["Names"])):
-        if str(np.array(df["No. of individuals seen"])[iterant]).isdigit() and str(np.array(df["No. of individuals seen"])[iterant])!="0":
-            array_names.append(np.array(df["Names"])[iterant])
-            array_dates.append(np.array(df["date code"])[iterant])
-            array_timecodes.append(np.array(df["codes"])[iterant])
-            array_loc.append(np.array(df["Location"])[iterant])
-            array_wea.append(np.array(df["Weather"])[iterant])
-
-        if str(np.array(df["No. of individuals seen and heard"])[iterant]).isdigit() and str(np.array(df["No. of individuals seen and heard"])[iterant])!="0":
-            array_names.append(np.array(df["Names"])[iterant])
-            array_dates.append(np.array(df["date code"])[iterant])
-            array_timecodes.append(np.array(df["codes"])[iterant])
-            array_loc.append(np.array(df["Location"])[iterant])
-            array_wea.append(np.array(df["Weather"])[iterant])
+            if str(np.array(df["No. of individuals heard"])[iterant]).isdigit() and str(np.array(df["No. of individuals heard"])[iterant])!="0":
+                array_names.append(np.array(df["Names"])[iterant])
+                array_dates.append(np.array(df["date code"])[iterant])
+                array_timecodes.append(np.array(df["codes"])[iterant])
+                array_loc.append(np.array(df["Location"])[iterant])
+                array_wea.append(np.array(df["Weather"])[iterant])
+                array_datetime.append(str(np.array(df["date code"])[iterant])+"_"+str(np.array(df["codes"])[iterant]))
+    if "s" in indices:
+        for iterant in range(len(df["Names"])):  
+            if str(np.array(df["No. of individuals seen"])[iterant]).isdigit() and str(np.array(df["No. of individuals seen"])[iterant])!="0":
+                array_names.append(np.array(df["Names"])[iterant])
+                array_dates.append(np.array(df["date code"])[iterant])
+                array_timecodes.append(np.array(df["codes"])[iterant])
+                array_loc.append(np.array(df["Location"])[iterant])
+                array_wea.append(np.array(df["Weather"])[iterant])
+                array_datetime.append(str(np.array(df["date code"])[iterant])+"_"+str(np.array(df["codes"])[iterant]))
+    if "hs" in indices:# or "sh" in indices:
+        for iterant in range(len(df["Names"])):
+            if str(np.array(df["No. of individuals seen and heard"])[iterant]).isdigit() and str(np.array(df["No. of individuals seen and heard"])[iterant])!="0":
+                array_names.append(np.array(df["Names"])[iterant])
+                array_dates.append(np.array(df["date code"])[iterant])
+                array_timecodes.append(np.array(df["codes"])[iterant])
+                array_loc.append(np.array(df["Location"])[iterant])
+                array_wea.append(np.array(df["Weather"])[iterant])
+                array_datetime.append(str(np.array(df["date code"])[iterant])+"_"+str(np.array(df["codes"])[iterant]))
 
     d= dict(zip(keys, array))
     new_df= pd.DataFrame.from_dict(d)
@@ -89,9 +97,61 @@ def parse_df_for_seen_only(df, dir_to_store):
     new_df.to_csv("filt_ds.csv")
     return new_df
 
-parse_df_for_seen_only(df_datasheet, common_resources)
+
+# execute code
+data_labels= ["heard", "seen"]
+wd= "D:\\Research\\analyze_embeddings\\"
+common_resources= wd+ "common_resources\\"
+os.chdir(common_resources)
+df_datasheet= pd.read_excel("current_training_dataset.xlsx")
+df_datasheet["codes"]= add_time_codes_to_df(df_datasheet)
+df_datasheet= add_date_time_codes(df_datasheet)
+os.chdir(wd)
+for label in data_labels:
+    dir_to_store= common_resources + label +"_datafiles\\"
+    make_dir(dir_to_store)
+    if label== "heard":
+        indices= ["h", "hs"]
+    if label== "seen":
+        indices= ["s", "hs"]
+    parse_df_for_seen_only(df_datasheet, dir_to_store, indices)
+
+    os.chdir(dir_to_store)
+    df= pd.read_csv("filt_ds.csv")
+    keys= list(set(df["datetimelabel"])) #unique labels
+    groupbykeys= df.groupby("datetimelabel")
+    output_arr=[]
+    unique_bird_array= sorted(list(set(df["name"])))
+    y_arr= []
+    loc_labels= []
+    for key in keys:
+        arr_1_0= np.zeros(shape= (len(unique_bird_array)))
+        group_for_key= groupbykeys.get_group(key)
+        output= list(set(group_for_key["name"]))
+        loc= list(set(group_for_key["loc"]))[0]
+        output_arr.append(output)
+        loc_labels.append(loc)
+        for it in range(len(unique_bird_array)):
+            bird= unique_bird_array[it]
+            if bird in output:
+                arr_1_0[it]=1
+        y_arr.append(arr_1_0)
+
+    dictionary_output= dict(zip(keys, output_arr))
+    dictionary_loclabels= dict(zip(keys, loc_labels))
+    dictionary_y= dict(zip(keys, y_arr))
+    make_dir(dir_to_store)
+    os.chdir(dir_to_store)
+    with open("output.pickle", 'wb') as handle:
+        pickle.dump(dictionary_output, handle, protocol=-1)
+    with open("loclabels.pickle", 'wb') as handle:
+        pickle.dump(dictionary_loclabels, handle, protocol=-1)
+    with open("y_arr.pickle", 'wb') as handle:
+        pickle.dump(dictionary_y, handle, protocol=-1)
+
+    print("Task done for " + label)
+        
 
 
-        
-        
+
 

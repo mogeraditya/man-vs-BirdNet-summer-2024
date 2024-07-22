@@ -25,7 +25,7 @@ def make_dir(new_dir):
 def create_embeddings_averaged_one_minute(array_of_dicts, dir_to_store, date_code):
     embedding_arr= []
     keys= []
-    for time in range(0,60):
+    for time in range(0,51):
         array_sub_time= list(np.arange(time*20, (time+1)*20))
         null_vector= np.zeros(shape=(1024))
         counter=0
@@ -34,8 +34,8 @@ def create_embeddings_averaged_one_minute(array_of_dicts, dir_to_store, date_cod
             counter+=1
         average_embedding_vector= null_vector/counter
         embedding_arr.append(average_embedding_vector)
-        print(len(average_embedding_vector))
-        keys.append(time)
+        # print(len(average_embedding_vector))
+        keys.append(str(date_code)+"_"+str(time))
     dictionary= dict(zip(keys, embedding_arr))
     # print(dictionary)
 
@@ -58,7 +58,8 @@ def generate_embeddings_per_date(audio_file,lat, lon, date_code, date_in_datetim
     recording.extract_embeddings()
     embeddings= recording.embeddings
 
-    dir_to_store= common_resources+"store_embeddings_dict\\"+ date_code + "\\"
+    dir_to_store= common_resources+"store_embeddings_dict\\"
+
     create_embeddings_averaged_one_minute(embeddings, dir_to_store, date_code)
     return "Done for " + str(date_code)
 
