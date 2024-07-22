@@ -1,7 +1,7 @@
 import os
 import glob
 import pickle 
-
+import numpy as np
 def make_dir(new_dir):
     if not os.path.exists(new_dir):
         os.makedirs(new_dir)
@@ -47,7 +47,11 @@ def score_list_of_arrays(list1, list2):
         print("ERROR DENOM ZERO")
     else:
         precision= tp_total/(tp_total+fp_total)
-        f1_score= (precision*recall)/ (precision+recall)
+        if (precision+recall)==0:
+            f1_score= 0
+            print("ERROR F1 DENOM ZERO")
+        else:
+            f1_score= (precision*recall)/ (precision+recall)
     return precision, recall, f1_score
 
 # storage= "d:\\Research\\analyze_embeddings\\" #source folder
@@ -57,8 +61,15 @@ def score_list_of_arrays(list1, list2):
 # dir= common_resources+ "store_embeddings_bn_dict\\"
 def scorer(clf, x, y):
     y_pred= clf.predict(x)
-    prec= score_list_of_arrays(y, y_pred)[1]
-    return prec
+    tp_total, fp_total, fn_total, tn_total= 0,0,0,0
+    for i in range(len(y)):
+        tp, fp,fn,tn = compare_array(y[i],y_pred[i])
+        tp_total+=tp
+        fp_total+=fp
+        fn_total+=fn
+        tn_total+=tn
+    recall= tp_total/ (tp_total+fn_total)
+    return recall
 
 def get_x_and_y(dir_embeddings, dir_dataset):
 
