@@ -89,3 +89,4 @@ for train_index, test_index in kf.split(x):
     y_train, y_test = np.array(y)[train_index.astype(int)], np.array(y)[test_index.astype(int)]
     clf.fit(x_train, y_train)
     store_info.append(clf.score(x_test, y_test))
+print(store_info)

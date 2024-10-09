@@ -51,8 +51,8 @@ def score_list_of_arrays(list1, list2):
             f1_score= 0
             print("ERROR F1 DENOM ZERO")
         else:
-            f1_score= (precision*recall)/ (precision+recall)
-    return precision, recall, f1_score
+            f1_score= (2*precision*recall)/ (precision+recall)
+    return precision, recall, f1_score #'''tp, fp, fn'''
 
 # storage= "d:\\Research\\analyze_embeddings\\" #source folder
 # sound_data= storage+ "sound_data\\" #location of sound files
@@ -97,7 +97,9 @@ def get_x_and_y(dir_embeddings, dir_dataset):
     y= list(subset_y_dict.values())
     y= [list(i) for i in y]
     groups= list(subset_labels_dict.values())
+    
+    date_groups= [i[0:8] for i in list(subset_merged_dict.keys())]
 
-    return x,y,groups
+    return x,y, groups
 
 

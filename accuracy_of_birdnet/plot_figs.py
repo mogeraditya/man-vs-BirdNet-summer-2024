@@ -12,7 +12,7 @@ storage= "d:\\Research\\analyze_birdnet\\" #source folder
 sound_data= storage+ "sound_data\\" #location of sound files
 common_resources= storage#+ "common_resources\\" #refer to common resources folder in github
 
-interval_of_conf= list(np.arange(0.3, 0.9, 0.02)) #input the ranges of conf to run birdnet over
+interval_of_conf= list(np.arange(0.3, 0.9, 0.1)) #input the ranges of conf to run birdnet over
 interval_of_conf= [np.round(i,2) for i in interval_of_conf]
 time_interval= 5 #in minutes
 confusion_entries= ["tp", "fn", "fp"]
@@ -43,7 +43,7 @@ for it in range(len(list_of_birds)):
     except KeyError:
         continue
     new_df= pd.DataFrame(columns=["name", "datasheet", "confidence", "confusion", "confusion numbers"])
-    array=["tp", "fp"]
+    array=["tp", "fp", "fn"]
     array_counts=[]
     array_label=[]
     array_confidence=[]
@@ -75,45 +75,45 @@ for it in range(len(list_of_birds)):
     new_df["confidence"]=array_confidence
     new_df["name"]=bird
     df_list.append(new_df)
-    print(new_df)
+    # print(new_df)
     group= new_df.groupby("confusion matrix entries")
     fp_confusion= group.get_group("fp")
     tp_confusion= group.get_group("tp")
 
-    fig= plt.figure(figsize=(16,9))
-    plt.plot(fp_confusion["confidence"],fp_confusion["counts"], label="false positive")
-    plt.plot(tp_confusion["confidence"],tp_confusion["counts"], label="true positive")
-    plt.title(bird+ " line plot")
-    plt.legend()
-    wd= os.getcwd()
-    dir_store_plots= storage +"\\plots_storage_confusion_0.3_to_0.9_step_0.02\\tp_fp_all_birds_line_plots\\"
-    make_dir(dir_store_plots)
-    os.chdir(dir_store_plots)
-    plt.savefig(bird+"_confusion_0.3_to_0.9_tp_fp_line_plots.png", bbox_inches= "tight")
-    os.chdir(wd)
-    plt.clf()
-
     # fig= plt.figure(figsize=(16,9))
-    # # g = sns.catplot(
-    # # data=new_df, kind="bar",
-    # # x="confusion", y="confusion numbers", hue="confidence", palette="dark", alpha=.6, height=4
-    # # )
-    # # g.despine(left=True)
-    # # g.set_axis_labels("", "counts")
-    # # g.legend.set_title("confidence")
-    # # for i in g.containers:
-    # #     g.bar_label(i,)
-    # ax= sns.barplot( data=new_df, x="confusion matrix entries", y="counts", hue="confidence", palette="dark", alpha=.6)
-    # for i in ax.containers:
-    #     ax.bar_label(i,)
-    # plt.title(bird)
+    # plt.plot(fp_confusion["confidence"],fp_confusion["counts"], label="false positive")
+    # plt.plot(tp_confusion["confidence"],tp_confusion["counts"], label="true positive")
+    # plt.title(bird+ " line plot")
+    # plt.legend()
     # wd= os.getcwd()
-    # dir_store_plots= storage +"\\plots_storage_confusion_0.3_to_0.9_step_0.02\\tp_only_all_birds\\"
+    # dir_store_plots= storage +"\\plots_storage_confusion_0.3_to_0.9_step_0.02\\tp_fp_all_birds_line_plots\\"
     # make_dir(dir_store_plots)
     # os.chdir(dir_store_plots)
-    # plt.savefig(bird+"_confusion_0.3_to_0.9_tp_only.png", bbox_inches= "tight")
+    # plt.savefig(bird+"_confusion_0.3_to_0.9_tp_fp_line_plots.png", bbox_inches= "tight")
     # os.chdir(wd)
-    # # plt.clf()
+    # plt.clf()
+
+    fig= plt.figure(figsize=(16,9))
+    # g = sns.catplot(
+    # data=new_df, kind="bar",
+    # x="confusion", y="confusion numbers", hue="confidence", palette="dark", alpha=.6, height=4
+    # )
+    # g.despine(left=True)
+    # g.set_axis_labels("", "counts")
+    # g.legend.set_title("confidence")
+    # for i in g.containers:
+    #     g.bar_label(i,)
+    ax= sns.barplot( data=new_df, x="confusion matrix entries", y="counts", hue="confidence", palette="dark", alpha=.6)
+    for i in ax.containers:
+        ax.bar_label(i,)
+    plt.title(bird)
+    wd= os.getcwd()
+    dir_store_plots= storage +"\\plots_storage_confusion_0.3_to_0.9_step_0.02\\tp_fp_fn_all_birds_meeting\\"
+    make_dir(dir_store_plots)
+    os.chdir(dir_store_plots)
+    plt.savefig(bird+"_confusion_0.3_to_0.9_tp_only.png", bbox_inches= "tight")
+    os.chdir(wd)
+    # plt.clf()
 
 
 # current_df.set_index('confidence', inplace=True)

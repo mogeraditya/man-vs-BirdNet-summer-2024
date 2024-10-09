@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 storage= "d:\\Research\\analyze_embeddings\\" #source folder
 sound_data= storage+ "sound_data\\" #location of sound files
 common_resources= storage+ "common_resources\\"
-plot= storage+ "plots\\"
+plot= storage+ "plots\\remake_knn_varied_n_neigh\\"
 dir_heard= common_resources+ "heard_datafiles\\"
 dir_seen= common_resources+ "seen_datafiles\\"
 
@@ -19,7 +19,7 @@ dir_vggish= common_resources+ "store_vggish_embeddings\\"
 dir_vggish_stack= common_resources+ "store_vggish_embeddings_stacked\\"
 
 loop1, labels1= [dir_seen], ["seen"]
-loop2, labels2= [dir_bn_stack, dir_vggish, dir_vggish_stack], ["bn_stack", "vggish", "vggish_stack"]
+loop2, labels2= [dir_bn, dir_vggish], ["bn", "vggish"]
 def make_dir(new_dir):
     if not os.path.exists(new_dir):
         os.makedirs(new_dir)
@@ -71,24 +71,26 @@ for item1 in range(len(loop1)):
         save_array("precision_train_n_est", clf_prec_arr_over_n_est_train)
         save_array("recall_n_est", clf_rec_arr_over_n_est)
         save_array("recall_train_n_est", clf_rec_arr_over_n_est_train)
-        plt.plot(np.arange(1, 40, 1),clf_prec_arr_over_n_est, label="test")
-        plt.plot(np.arange(1, 40, 1),clf_prec_arr_over_n_est_train, label="train")
-        plt.legend()
-        plt.title(big_label+ " knn precision over varied n_neighbours")
-        plt.ylabel("precision")
-        plt.xlabel("n_neighbours")
-        plt.ylim(0,1)
-        plt.savefig("knn_w_varied_n_neigh_prec.png")
-        plt.clf()
-        plt.plot(np.arange(1, 40, 1),clf_rec_arr_over_n_est, label="test")
-        plt.plot(np.arange(1, 40, 1),clf_rec_arr_over_n_est_train, label="train")
-        plt.legend()
-        plt.title(big_label+ " knn recall over varied n_neighbours")
-        plt.ylabel("recall")
-        plt.xlabel("n_neighbours")
-        plt.ylim(0,1)
-        plt.savefig("knn_w_varied_n_neigh_rec.png")
-        plt.clf()
+        # plt.plot(np.arange(1, 40, 1),clf_prec_arr_over_n_est, label="test")
+        # plt.plot(np.arange(1, 40, 1),clf_prec_arr_over_n_est_train, label="train")
+        # plt.legend()
+        # plt.title(big_label+ " knn precision over varied n_neighbours")
+        # plt.ylabel("precision")
+        # plt.xlabel("n_neighbours")
+        # plt.ylim(0,1)
+        # plt.savefig("knn_w_varied_n_neigh_prec.png")
+        # plt.clf()
+        # plt.plot(np.arange(1, 40, 1),clf_rec_arr_over_n_est, label="test")
+        # plt.plot(np.arange(1, 40, 1),clf_rec_arr_over_n_est_train, label="train")
+        # plt.legend()
+        # plt.title(big_label+ " knn recall over varied n_neighbours")
+        # plt.ylabel("recall")
+        # plt.xlabel("n_neighbours")
+        # plt.ylim(0,1)
+        # plt.savefig("knn_w_varied_n_neigh_rec.png")
+        # plt.clf()
+        make_dir(plot)
+        os.chdir(plot)
         plt.plot(np.arange(1, 40, 1),clf_prec_arr_over_n_est, label="precision test")
         plt.plot(np.arange(1, 40, 1),clf_prec_arr_over_n_est_train, label="precision train")
         plt.plot(np.arange(1, 40, 1),clf_rec_arr_over_n_est, label="recall test")

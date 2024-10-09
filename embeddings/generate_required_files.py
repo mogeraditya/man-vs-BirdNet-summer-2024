@@ -99,7 +99,7 @@ def parse_df_for_seen_only(df, dir_to_store, indices):
 
 
 # execute code
-data_labels= ["heard", "seen"]
+data_labels= ["seen"]
 wd= "D:\\Research\\analyze_embeddings\\"
 common_resources= wd+ "common_resources\\"
 os.chdir(common_resources)
@@ -113,7 +113,7 @@ for label in data_labels:
     if label== "heard":
         indices= ["h", "hs"]
     if label== "seen":
-        indices= ["s", "hs"]
+        indices= ["s"]
     parse_df_for_seen_only(df_datasheet, dir_to_store, indices)
 
     os.chdir(dir_to_store)
@@ -122,21 +122,32 @@ for label in data_labels:
     groupbykeys= df.groupby("datetimelabel")
     output_arr=[]
     unique_bird_array= sorted(list(set(df["name"])))
+    # create dict with value as count and key as bird; sort by values
+    lis= list(df["name"])
+    list_of_counts= []
+    # list_of_birds= []
+    for bird in unique_bird_array:
+        occurrence = {item: lis.count(item) for item in lis}
+        count= occurrence.get(bird)
+        list_of_counts.append(count)
+    dict_of_counts= dict(zip(unique_bird_array, list_of_counts))
+    sorted_dict_of_counts= {k: v for k, v in sorted(dict_of_counts.items(), key=lambda item: item[1])}
+    sorted_unique_bird_array= list(sorted_dict_of_counts.keys())
     y_arr= []
     loc_labels= []
     for key in keys:
-        arr_1_0= np.zeros(shape= (len(unique_bird_array)))
+        arr_1_0= np.zeros(shape= (len(sorted_unique_bird_array)))
         group_for_key= groupbykeys.get_group(key)
         output= list(set(group_for_key["name"]))
         loc= list(set(group_for_key["loc"]))[0]
         output_arr.append(output)
         loc_labels.append(loc)
-        for it in range(len(unique_bird_array)):
-            bird= unique_bird_array[it]
+        for it in range(len(sorted_unique_bird_array)):
+            bird= sorted_unique_bird_array[it]
             if bird in output:
                 arr_1_0[it]=1
         y_arr.append(arr_1_0)
-
+    print(sorted_unique_bird_array)
     dictionary_output= dict(zip(keys, output_arr))
     dictionary_loclabels= dict(zip(keys, loc_labels))
     dictionary_y= dict(zip(keys, y_arr))
