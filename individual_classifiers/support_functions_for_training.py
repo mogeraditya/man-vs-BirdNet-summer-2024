@@ -119,6 +119,7 @@ def get_x_and_y(dir_embeddings, dir_dataset):
     y= list(subset_y_dict.values())
     y= [list(i) for i in y]
     groups= list(subset_labels_dict.values())
+    groups= [i.strip() for i in groups]
     
     date_groups= [i[0:8] for i in list(subset_merged_dict.keys())]
 
@@ -153,6 +154,7 @@ def get_xy_for_individual_classsifier(dir_embeddings, dir_dataset, species_name)
     sampled_negs_index= random.sample(range(len(negative_x)), number_of_positives)
     sampled_negs= [negative_x[i] for i in sampled_negs_index]
     sampled_negs_groups= [neg_group[i] for i in sampled_negs_index]
+    sampled_negs_date= [neg_date[i] for i in sampled_negs_index]
     
     pos_score= list(np.ones(shape=(len(positive_x))))
     neg_score= list(np.zeros(shape=(len(sampled_negs))))
@@ -160,7 +162,7 @@ def get_xy_for_individual_classsifier(dir_embeddings, dir_dataset, species_name)
     Score= pos_score + neg_score
     X= positive_x + sampled_negs
     groups= list(pos_group) + list(sampled_negs_groups)
-    date_groups= list(pos_date) + list(pos_date)
+    date_groups= list(pos_date) + list(sampled_negs_date)
     print(len(groups), len(positive_x))
     return X, Score, groups, date_groups
 

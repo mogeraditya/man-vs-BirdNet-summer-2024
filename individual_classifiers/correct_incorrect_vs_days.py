@@ -40,7 +40,8 @@ def open_array(filename):
 storage= "d:\\Research\\analyze_embeddings\\" #source folder
 sound_data= storage+ "sound_data\\" #location of sound files
 common_resources= storage+ "common_resources\\"
-plot= "D:\\github\\man-vs-BirdNet-summer-2024-\\individual_classifiers\\plots\\knn\\corr_incorr\\date\\"
+plot= "D:\\github\\man-vs-BirdNet-summer-2024-\\individual_classifiers\\plots\\knn\\corr_incorr\\site\\"
+plot_grouped= "D:\\github\\man-vs-BirdNet-summer-2024-\\individual_classifiers\\plots\\knn\\corr_incorr\\site\\group_bar_plot"
 dir_heard= common_resources+ "heard_datafiles\\"
 dir_seen= common_resources+ "seen_datafiles\\"
 
@@ -77,37 +78,58 @@ for item1 in range(len(loop1)):
             clf.fit(X_train, y_train)
             y_pred = clf.predict(X_test)
             y_train_pred = clf.predict(X_train) 
-            unique_dates = list(set(date_groups))
-            test_correct_counts, test_incorrect_counts= sf.get_corr_incorr_counts(date_groups,unique_dates, y_pred, y_test)
-            train_correct_counts, train_incorrect_counts= sf.get_corr_incorr_counts(date_groups,unique_dates, y_train_pred, y_train)
-            print(train_correct_counts, train_incorrect_counts, test_correct_counts, test_incorrect_counts)
-            print(np.sum(train_correct_counts+ train_incorrect_counts+ test_correct_counts+ test_incorrect_counts)) #checking if it makes sense
-            print(len(unique_dates))
-            os.chdir(plot)
+            
+            unique_dates = list(set(date_test))
+            unique_dates = [int(i) for i in unique_dates]
+            unique_dates= list(np.sort(unique_dates)); unique_dates = [str(i) for i in unique_dates]
+            test_correct_counts, test_incorrect_counts= sf.get_corr_incorr_counts(date_test,unique_dates, y_pred, y_test)
+            # unique_dates = list(set(date_train))
+            # train_correct_counts, train_incorrect_counts= sf.get_corr_incorr_counts(date_train,unique_dates, y_train_pred, y_train)
+            # print(train_correct_counts, train_incorrect_counts, test_correct_counts, test_incorrect_counts)
+            # print(np.sum(train_correct_counts+ train_incorrect_counts+ test_correct_counts+ test_incorrect_counts)) #checking if it makes sense
+            # print(len(unique_dates))
+            # os.chdir(plot)
+            # plt.figure(figsize=(16,5))
+            
+            # plt.bar(unique_dates,train_correct_counts, alpha=0.3, label= "train (n_correct="+str(int(np.sum(train_correct_counts)))+ " out of "+str(len(y_train_pred))+")")
+            # plt.bar(unique_dates,test_correct_counts, alpha=0.75, label= "test (n_correct="+str(int(np.sum(test_correct_counts)))+ " out of "+str(len(y_pred))+")")
+            
+            # plt.title("counts of correct per date")
+            # plt.legend()
+            # plt.xticks(ticks=range(len(unique_dates)), labels= unique_dates, rotation= 90)
+            # plt.tight_layout()
+            # plt.savefig(species_name+"_correct_counts_hist_"+big_label+".png")
+            # plt.clf()
+            
+            # plt.figure(figsize=(16,5))
+            
+            # plt.bar(unique_dates, train_incorrect_counts, alpha=0.3, label= "train (n_incorrect="+str(int(np.sum(train_incorrect_counts)))+ " out of "+str(len(y_train_pred))+")")
+            # plt.bar(unique_dates, test_incorrect_counts, alpha=0.75, label= "test (n_incorrect="+str(int(np.sum(test_incorrect_counts)))+ " out of "+str(len(y_pred))+")")
+            
+            # plt.title("counts of incorrect per date")
+            # plt.legend()
+            # plt.xticks(ticks=range(len(unique_dates)), labels= unique_dates, rotation= 90)
+            # plt.tight_layout()
+            # plt.savefig(species_name+"_incorrect_counts_hist_"+big_label+".png")
+            # plt.clf()
+            
+            make_dir(plot_grouped)
+            os.chdir(plot_grouped)
+            df_grouped_plot= pd.DataFrame(columns= ["date", "type", "count"])
+            consolidated_counts= list(test_correct_counts)+ list(test_incorrect_counts)
+            type_array= ["correct" for i in test_correct_counts] + ["incorrect" for i in test_incorrect_counts]
+            date_array= unique_dates+unique_dates
+            df_grouped_plot["date"]= date_array; df_grouped_plot["type"]= type_array; df_grouped_plot["count"]= consolidated_counts
+            #plot
             plt.figure(figsize=(16,5))
-            
-            plt.bar(unique_dates,train_correct_counts, alpha=0.3, label= "train (n_correct="+str(int(np.sum(train_correct_counts)))+ " out of "+str(len(y_train_pred))+")")
-            plt.bar(unique_dates,test_correct_counts, alpha=0.75, label= "test (n_correct="+str(int(np.sum(test_correct_counts)))+ " out of "+str(len(y_pred))+")")
-            
-            plt.title("counts of correct per date")
+            sns.barplot(data= df_grouped_plot, x="date", y="count", hue= "type")
+            plt.title(f"counts of correct/ incorrect per date; n_neigh={neigh}")
             plt.legend()
             plt.xticks(ticks=range(len(unique_dates)), labels= unique_dates, rotation= 90)
             plt.tight_layout()
-            plt.savefig(species_name+"_correct_counts_hist_"+big_label+".png")
+            plt.savefig(species_name+"_counts_hist_"+big_label+".png")
             plt.clf()
             
-            plt.figure(figsize=(16,5))
-            
-            plt.bar(unique_dates, train_incorrect_counts, alpha=0.3, label= "train (n_incorrect="+str(int(np.sum(train_incorrect_counts)))+ " out of "+str(len(y_train_pred))+")")
-            plt.bar(unique_dates, test_incorrect_counts, alpha=0.75, label= "test (n_incorrect="+str(int(np.sum(test_incorrect_counts)))+ " out of "+str(len(y_pred))+")")
-            
-            plt.title("counts of incorrect per date")
-            plt.legend()
-            plt.xticks(ticks=range(len(unique_dates)), labels= unique_dates, rotation= 90)
-            plt.tight_layout()
-            plt.savefig(species_name+"_incorrect_counts_hist_"+big_label+".png")
-            plt.clf()
-                
             
             
             
@@ -132,8 +154,8 @@ for item1 in range(len(loop1)):
 #             unique = list(set(groups))
 #             test_correct_counts, test_incorrect_counts= sf.get_corr_incorr_counts(groups,unique, y_pred, y_test)
 #             train_correct_counts, train_incorrect_counts= sf.get_corr_incorr_counts(groups,unique, y_train_pred, y_train)
-#             print(train_correct_counts, train_incorrect_counts, test_correct_counts, test_incorrect_counts)
-#             print(np.sum(train_correct_counts+ train_incorrect_counts+ test_correct_counts+ test_incorrect_counts)) #checking if it makes sense
+#             # print(train_correct_counts, train_incorrect_counts, test_correct_counts, test_incorrect_counts)
+#             # print(np.sum(train_correct_counts+ train_incorrect_counts+ test_correct_counts+ test_incorrect_counts)) #checking if it makes sense
 #             print(len(unique))
 #             os.chdir(plot)
 #             plt.figure(figsize=(16,5))
@@ -141,7 +163,7 @@ for item1 in range(len(loop1)):
 #             plt.bar(unique, train_correct_counts, alpha=0.3, label= "train (n_correct="+str(int(np.sum(train_correct_counts)))+ " out of "+str(len(y_train_pred))+")")
 #             plt.bar(unique, test_correct_counts, alpha=0.75, label= "test (n_correct="+str(int(np.sum(test_correct_counts)))+ " out of "+str(len(y_pred))+")")
             
-#             plt.title("counts of correct per date")
+#             plt.title("counts of correct per site")
 #             plt.legend()
 #             plt.xticks(ticks=range(len(unique)), labels= unique, rotation= 90)
 #             plt.tight_layout()
@@ -153,11 +175,28 @@ for item1 in range(len(loop1)):
 #             plt.bar(unique, train_incorrect_counts, alpha=0.3, label= "train (n_incorrect="+str(int(np.sum(train_incorrect_counts)))+ " out of "+str(len(y_train_pred))+")")
 #             plt.bar(unique, test_incorrect_counts, alpha=0.75, label= "test (n_incorrect="+str(int(np.sum(test_incorrect_counts)))+ " out of "+str(len(y_pred))+")")
             
-#             plt.title("counts of incorrect per date")
+#             plt.title("counts of incorrect per site")
 #             plt.legend()
 #             plt.xticks(ticks=range(len(unique)), labels= unique, rotation= 90)
 #             plt.tight_layout()
 #             plt.savefig(species_name+"_incorrect_counts_hist_"+big_label+".png")
+#             plt.clf()
+            
+#             make_dir(plot_grouped)
+#             os.chdir(plot_grouped)
+#             df_grouped_plot= pd.DataFrame(columns= ["site", "type", "count"])
+#             consolidated_counts= list(test_correct_counts)+ list(test_incorrect_counts)
+#             type_array= ["correct" for i in test_correct_counts] + ["incorrect" for i in test_incorrect_counts]
+#             site_array= unique+unique
+#             df_grouped_plot["site"]= site_array; df_grouped_plot["type"]= type_array; df_grouped_plot["count"]= consolidated_counts
+#             #plot
+#             plt.figure(figsize=(16,5))
+#             sns.barplot(data= df_grouped_plot, x="site", y="count", hue= "type")
+#             plt.title(f"counts of correct/ incorrect per site; n_neigh={neigh}")
+#             plt.legend()
+#             plt.xticks(ticks=range(len(unique)), labels= unique, rotation= 90)
+#             plt.tight_layout()
+#             plt.savefig(species_name+"_counts_hist_"+big_label+".png")
 #             plt.clf()
                 
             
